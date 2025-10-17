@@ -1,17 +1,45 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🍽️ Recipe App
 
-Currently, two official plugins are available:
+A dynamic and responsive recipe application built with **React** and **TailwindCSS**, powered by [TheMealDB API](https://www.themealdb.com/api.php). Users can browse, search, filter, and view full recipe details — with optional favorites saved locally.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🧁 Recipe Listings
+- Browse recipes with name, image, and category
+- Responsive grid layout with polished UI
 
-## Expanding the ESLint configuration
+### 🔍 Search & Filter
+- Search recipes by name or keyword
+- Filter by category
+- Combine search and filter for refined results
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-"# recipetask" 
+### 📋 Recipe Details
+- View full recipe in a modal: ingredients, instructions, category, and video link
+- Smooth modal transitions and scrollable content
+
+### ❤️ Favorites (Optional)
+- Mark/unmark recipes as favorites
+- Favorites saved in `localStorage` for persistence
+- Toggle between all recipes and favorites
+
+---
+
+## 🛠️ Tech Stack
+
+- **React JS** — UI and state management
+- **TailwindCSS** — Styling and layout
+- **Axios** — API requests
+- **TheMealDB API** — Public recipe data
+
+---
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/your-username/recipe-app.git
+cd recipe-app
+npm install
+npm run dev

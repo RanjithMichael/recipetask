@@ -3,6 +3,7 @@ import {
   fetchAllMeals,
   searchMealsByName,
   fetchCategories,
+  fetchMealById,
 } from "../api/mealApi";
 import RecipeCard from "../components/RecipeCard";
 import SearchBar from "../components/SearchBar";
@@ -40,9 +41,10 @@ export default function Home() {
     }
   }, [searchQuery]);
 
-  const filteredRecipes = !showFavorites && selectedCategory
-    ? recipes.filter((r) => r.strCategory === selectedCategory)
-    : recipes;
+  const filteredRecipes =
+    !showFavorites && selectedCategory
+      ? recipes.filter((r) => r.strCategory === selectedCategory)
+      : recipes;
 
   const displayedRecipes = showFavorites ? favorites : filteredRecipes;
 
@@ -55,8 +57,26 @@ export default function Home() {
     });
   }
 
+  async function handleCardClick(id) {
+    const fullRecipe = await fetchMealById(id);
+    if (fullRecipe) {
+      setSelectedRecipe(fullRecipe);
+    }
+  }
+
   return (
     <div className="container mx-auto p-4">
+      {/* 🧁 Heading Section */}
+      <div className="text-center mb-8">
+        <h1 className="text-4xl font-extrabold text-indigo-600">
+          🍽️ Explore Delicious Recipes
+        </h1>
+        <p className="text-gray-600 mt-2">
+          Discover new dishes, save your favorites, and get inspired to cook!
+        </p>
+      </div>
+
+      {/* 🔍 Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
         <SearchBar
           searchQuery={searchQuery}
@@ -75,6 +95,7 @@ export default function Home() {
         </button>
       </div>
 
+      {/* 🧁 Recipe Grid */}
       {displayedRecipes.length === 0 ? (
         <p className="text-center text-gray-500 mt-8">No recipes found.</p>
       ) : (
@@ -85,12 +106,13 @@ export default function Home() {
               recipe={recipe}
               onFavoriteToggle={() => handleFavoriteToggle(recipe)}
               isFavorite={favorites.some((r) => r.idMeal === recipe.idMeal)}
-              onClick={() => setSelectedRecipe(recipe)}
+              onClick={() => handleCardClick(recipe.idMeal)}
             />
           ))}
         </div>
       )}
 
+      {/* 🍲 Modal */}
       {selectedRecipe && (
         <RecipeModal
           recipe={selectedRecipe}
