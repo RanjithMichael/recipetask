@@ -1,4 +1,9 @@
+import { useState, useRef, useEffect } from "react";
+
 export default function RecipeModal({ recipe, onClose }) {
+  const [activeTab, setActiveTab] = useState("ingredients");
+  const contentRef = useRef(null); // Ref to scrollable content
+
   if (!recipe) return null;
 
   const getYoutubeEmbedUrl = (url) => {
@@ -6,74 +11,99 @@ export default function RecipeModal({ recipe, onClose }) {
     return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
   };
 
-  const embedUrl = getYoutubeEmbedUrl(recipe.strYoutube);
+  // Build ingredients array safely
+  const ingredients = [];
+  for (let i = 1; i <= 20; i++) {
+    const ingredient = recipe[`strIngredient${i}`];
+    const measure = recipe[`strMeasure${i}`];
+    if (ingredient && ingredient.trim() !== "") {
+      ingredients.push(`${ingredient} - ${measure || ""}`);
+    }
+  }
+
+  // Scroll to top whenever tab changes
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, [activeTab]);
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="recipe-title"
-    >
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 overflow-y-auto max-h-[90vh] animate-fadeIn">
-        {/* Header */}
-        <div className="flex justify-between items-center p-4 border-b">
-          <h2 id="recipe-title" className="text-xl font-bold text-gray-800">
-            {recipe.strMeal}
-          </h2>
-          <button
-            onClick={onClose}
-            aria-label="Close modal"
-            className="text-gray-500 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 rounded"
-          >
-            ✕
-          </button>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/50 overflow-y-auto p-4">
+      <div className="bg-white rounded-xl shadow-lg max-w-lg w-full relative flex flex-col max-h-[90vh]">
+        {/* Close Button */}
+        <button
+          className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 z-20"
+          onClick={onClose}
+          aria-label="Close modal"
+        >
+          ✕
+        </button>
 
-        {/* Image */}
+        {/* Recipe Image */}
         <img
           src={recipe.strMealThumb}
           alt={recipe.strMeal}
-          className="w-full h-64 object-cover"
+          className="w-full h-64 object-cover rounded-t-xl"
         />
 
-        {/* Content */}
-        <div className="p-4 space-y-4">
-          {/* Ingredients */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700">Ingredients</h3>
-            <ul className="list-disc list-inside text-gray-600">
-              {Array.from({ length: 20 }, (_, i) => {
-                const ing = recipe[`strIngredient${i + 1}`]?.trim();
-                const meas = recipe[`strMeasure${i + 1}`]?.trim();
-                return ing && ing !== "" ? (
-                 <li key={i}>{`${ing}${meas ? ` - ${meas}` : ""}`}</li>
-                ) : null;
-       })}
-
+        {/* Scrollable Content */}
+        <div
+          ref={contentRef}
+          className="flex-1 overflow-y-auto p-4 space-y-4 pb-20"
+        >
+          {activeTab === "ingredients" && (
+            <ul className="list-disc list-inside">
+              {ingredients.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
-          </div>
-
-          {/* Instructions */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-700">Instructions</h3>
-            <p className="text-gray-800 whitespace-pre-line">{recipe.strInstructions}</p>
-          </div>
-
-          {/* Video */}
-          {embedUrl && (
-            <div>
-              <h3 className="text-lg font-semibold text-gray-700">Video Tutorial</h3>
-              <div className="aspect-video">
-                <iframe
-                  src={embedUrl}
-                  title="Recipe Video"
-                  allowFullScreen
-                  className="w-full h-64 rounded"
-                />
-              </div>
-            </div>
           )}
+
+          {activeTab === "instructions" && (
+            <p className="whitespace-pre-line">{recipe.strInstructions}</p>
+          )}
+
+          {activeTab === "video" && (
+            <>
+              {recipe.strYoutube ? (
+                <div className="aspect-video">
+                  <iframe
+                    src={getYoutubeEmbedUrl(recipe.strYoutube)}
+                    title="Recipe Video"
+                    frameBorder="0"
+                    allowFullScreen
+                    className="w-full h-full rounded-lg"
+                  />
+                </div>
+              ) : (
+                <p className="text-gray-500">No video available for this recipe.</p>
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Fixed Bottom Pill Menu */}
+        <div className="fixed bottom-4 left-0 w-full flex justify-center px-4 z-30">
+          <div className="bg-white rounded-full shadow-lg flex gap-2 p-2">
+            {["ingredients", "instructions", "video"].map((tab) => (
+              <button
+                key={tab}
+                className={`px-4 py-2 rounded-full font-medium transition ${
+                  activeTab === tab
+                    ? "bg-orange-500 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+                onClick={() => setActiveTab(tab)}
+                aria-selected={activeTab === tab}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

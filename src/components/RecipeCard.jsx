@@ -1,40 +1,57 @@
 export default function RecipeCard({ recipe, onFavoriteToggle, isFavorite, onClick }) {
   return (
     <div
-      className="relative bg-white rounded-xl shadow-sm hover:shadow-md transition duration-300 overflow-hidden cursor-pointer w-full max-w-sm group"
       onClick={onClick}
+      onKeyDown={(e) => e.key === "Enter" && onClick?.()}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onClick?.()}
+      className="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group border border-gray-100"
     >
-      <div className="overflow-hidden">
+      {/* 🖼️ Recipe Image */}
+      <div className="overflow-hidden relative">
         <img
           src={recipe.strMealThumb}
           alt={recipe.strMeal}
-          className="w-full h-36 object-cover transform group-hover:scale-105 transition-transform duration-300"
+          className="w-full h-48 object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
         />
-      </div>
-
-      <div className="p-3 flex justify-between items-center">
-        <div className="flex flex-col">
-          <h2 className="text-base font-semibold text-gray-900 leading-tight">
-            {recipe.strMeal}
-          </h2>
-          <span className="mt-1 px-2 py-0.5 bg-orange-100 text-orange-600 text-xs rounded-full w-fit">
-            {recipe.strCategory}
-          </span>
-        </div>
-
+        {/* Favorite Button */}
         <button
-          className="text-xl focus:outline-none"
           onClick={(e) => {
             e.stopPropagation();
             onFavoriteToggle();
           }}
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          className={`absolute top-3 right-3 text-2xl transition-transform duration-300 ${
+            isFavorite
+              ? "text-red-500 scale-110"
+              : "text-white hover:scale-125 drop-shadow-md"
+          }`}
         >
           {isFavorite ? "❤️" : "🤍"}
         </button>
+      </div>
+
+      {/* 📋 Recipe Info */}
+      <div className="p-4 flex flex-col justify-between min-h-[110px]">
+        <h2 className="text-lg font-bold text-gray-800 group-hover:text-indigo-600 transition-colors duration-300 line-clamp-1">
+          {recipe.strMeal}
+        </h2>
+
+        <div className="flex justify-between items-center mt-2">
+          <span className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-600 rounded-full">
+            {recipe.strCategory}
+          </span>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onFavoriteToggle();
+            }}
+            className="hidden sm:inline-flex items-center gap-1 text-sm text-gray-600 hover:text-indigo-600 transition-colors duration-300"
+          >
+            {isFavorite ? "Remove ❤️" : "Add 🤍"}
+          </button>
+        </div>
       </div>
     </div>
   );
