@@ -31,7 +31,7 @@ export default function RecipeDetails() {
     }
   };
 
-  if (!recipe) return <p className="text-center mt-10">Loading...</p>;
+  if (!recipe) return <p className="text-center mt-10 text-gray-500 text-lg">Loading recipe details...</p>
 
   const ingredients = [];
   for (let i = 1; i <= 20; i++) {

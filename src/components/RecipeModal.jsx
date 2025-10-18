@@ -44,10 +44,13 @@ export default function RecipeModal({ recipe, onClose }) {
             <h3 className="text-lg font-semibold text-gray-700">Ingredients</h3>
             <ul className="list-disc list-inside text-gray-600">
               {Array.from({ length: 20 }, (_, i) => {
-                const ing = recipe[`strIngredient${i + 1}`];
-                const meas = recipe[`strMeasure${i + 1}`];
-                return ing ? <li key={i}>{`${ing} - ${meas}`}</li> : null;
-              })}
+                const ing = recipe[`strIngredient${i + 1}`]?.trim();
+                const meas = recipe[`strMeasure${i + 1}`]?.trim();
+                return ing && ing !== "" ? (
+                 <li key={i}>{`${ing}${meas ? ` - ${meas}` : ""}`}</li>
+                ) : null;
+       })}
+
             </ul>
           </div>
 
