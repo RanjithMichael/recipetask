@@ -19,7 +19,7 @@ export default function Home() {
   const [showFavorites, setShowFavorites] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
 
-  // 🧭 Initial data fetch
+  // Initial data fetch
   useEffect(() => {
     fetchAllMeals().then(setRecipes);
     fetchCategories().then(setCategories);
@@ -30,12 +30,12 @@ export default function Home() {
     }
   }, []);
 
-  // 💾 Sync favorites with localStorage
+  // Sync favorites with localStorage
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  // 🔍 Search functionality
+  // Search functionality
   useEffect(() => {
     if (searchQuery) {
       searchMealsByName(searchQuery).then((data) => setRecipes(data || []));
@@ -44,7 +44,7 @@ export default function Home() {
     }
   }, [searchQuery]);
 
-  // 🍽️ Filter logic
+  // Filter logic
   const filteredRecipes =
     !showFavorites && selectedCategory
       ? recipes.filter((r) => r.strCategory === selectedCategory)
@@ -52,7 +52,7 @@ export default function Home() {
 
   const displayedRecipes = showFavorites ? favorites : filteredRecipes;
 
-  // ⭐ Handle favorite toggle
+  // Handle favorite toggle
   function handleFavoriteToggle(recipe) {
     setFavorites((prev) => {
       const exists = prev.some((r) => r.idMeal === recipe.idMeal);
@@ -62,7 +62,7 @@ export default function Home() {
     });
   }
 
-  // 📖 Open modal
+  // Open modal
   async function handleCardClick(id) {
     const fullRecipe = await fetchMealById(id);
     if (fullRecipe) {
