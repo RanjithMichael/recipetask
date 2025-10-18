@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function RecipeModal({ recipe, onClose }) {
   if (!recipe) return null;
 
