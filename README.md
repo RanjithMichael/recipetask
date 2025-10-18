@@ -35,11 +35,3 @@ A dynamic and responsive recipe application built with **React** and **TailwindC
 - **TheMealDB API** — Public recipe data
 
 ---
-
-## 📦 Installation
-
-```bash
-git clone https://github.com/your-username/recipe-app.git
-cd recipe-app
-npm install
-npm run dev
